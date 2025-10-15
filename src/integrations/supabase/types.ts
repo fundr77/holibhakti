@@ -14,16 +14,209 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      content: {
+        Row: {
+          content_type: Database["public"]["Enums"]["app_content_type"]
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          file_url: string
+          health_category: Database["public"]["Enums"]["health_category"] | null
+          id: string
+          is_published: boolean | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          content_type: Database["public"]["Enums"]["app_content_type"]
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          file_url: string
+          health_category?:
+            | Database["public"]["Enums"]["health_category"]
+            | null
+          id?: string
+          is_published?: boolean | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          content_type?: Database["public"]["Enums"]["app_content_type"]
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          file_url?: string
+          health_category?:
+            | Database["public"]["Enums"]["health_category"]
+            | null
+          id?: string
+          is_published?: boolean | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          health_category: Database["public"]["Enums"]["health_category"] | null
+          id: string
+          phone_number: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_name?: string | null
+          health_category?:
+            | Database["public"]["Enums"]["health_category"]
+            | null
+          id: string
+          phone_number?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string | null
+          health_category?:
+            | Database["public"]["Enums"]["health_category"]
+            | null
+          id?: string
+          phone_number?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          payment_proof: string | null
+          plan: Database["public"]["Enums"]["app_role"]
+          start_date: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          payment_proof?: string | null
+          plan?: Database["public"]["Enums"]["app_role"]
+          start_date?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          payment_proof?: string | null
+          plan?: Database["public"]["Enums"]["app_role"]
+          start_date?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_analytics: {
+        Row: {
+          created_at: string | null
+          date: string
+          food_log: string | null
+          id: string
+          mood: string | null
+          notes: string | null
+          sleep_hours: number | null
+          updated_at: string | null
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          date?: string
+          food_log?: string | null
+          id?: string
+          mood?: string | null
+          notes?: string | null
+          sleep_hours?: number | null
+          updated_at?: string | null
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          date?: string
+          food_log?: string | null
+          id?: string
+          mood?: string | null
+          notes?: string | null
+          sleep_hours?: number | null
+          updated_at?: string | null
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_plan: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_content_type: "freebie" | "premium_video"
+      app_role: "free" | "premium" | "admin"
+      health_category:
+        | "diabetes"
+        | "thyroid"
+        | "ulcerative_colitis"
+        | "pcod"
+        | "high_blood_pressure"
+        | "general"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +343,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_content_type: ["freebie", "premium_video"],
+      app_role: ["free", "premium", "admin"],
+      health_category: [
+        "diabetes",
+        "thyroid",
+        "ulcerative_colitis",
+        "pcod",
+        "high_blood_pressure",
+        "general",
+      ],
+    },
   },
 } as const
