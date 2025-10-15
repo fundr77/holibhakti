@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-wellness.jpg";
 
 const Hero = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div 
@@ -38,10 +41,7 @@ const Hero = () => {
                 size="lg" 
                 variant="hero"
                 className="text-lg px-8 py-6"
-                onClick={() => {
-                  const contactSection = document.getElementById('contact');
-                  contactSection?.scrollIntoView({ behavior: 'smooth' });
-                }}
+                onClick={() => navigate('/auth')}
               >
                 Start Your Journey
                 <ArrowRight className="w-5 h-5" />
