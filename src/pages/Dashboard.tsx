@@ -40,15 +40,14 @@ const Dashboard = () => {
     }
 
     const fetchUserRole = async () => {
-      const { data: subscription } = await supabase
-        .from("subscriptions")
-        .select("plan")
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
         .eq("user_id", user.id)
-        .eq("is_active", true)
         .single();
 
-      if (subscription) {
-        setUserRole(subscription.plan as "free" | "premium" | "admin");
+      if (roleData) {
+        setUserRole(roleData.role as "free" | "premium" | "admin");
       }
       setLoading(false);
     };
