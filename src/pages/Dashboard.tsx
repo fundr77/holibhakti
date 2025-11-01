@@ -61,7 +61,7 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -81,9 +81,9 @@ const Dashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {userRole === "admin" && <AdminDashboard user={user!} />}
-        {userRole === "premium" && <PremiumDashboard user={user!} />}
-        {userRole === "free" && <FreeDashboard user={user!} />}
+        {userRole === "admin" && <AdminDashboard user={user} />}
+        {userRole === "premium" && <PremiumDashboard user={user} />}
+        {userRole === "free" && <FreeDashboard user={user} />}
       </main>
     </div>
   );
