@@ -3,6 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { BarChart3 } from "lucide-react";
+import UserAnalyticsReport from "./UserAnalyticsReport";
 
 interface Profile {
   id: string;
@@ -21,6 +24,7 @@ interface Subscription {
 const UserManagement = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [selectedUser, setSelectedUser] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -54,6 +58,7 @@ const UserManagement = () => {
               <TableHead>Health Category</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead>Joined</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -70,11 +75,30 @@ const UserManagement = () => {
                   </Badge>
                 </TableCell>
                 <TableCell>{new Date(profile.created_at).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedUser({ id: profile.id, name: profile.full_name })}
+                  >
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    View Report
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </CardContent>
+
+      {selectedUser && (
+        <UserAnalyticsReport
+          userId={selectedUser.id}
+          userName={selectedUser.name}
+          open={!!selectedUser}
+          onOpenChange={(open) => !open && setSelectedUser(null)}
+        />
+      )}
     </Card>
   );
 };
