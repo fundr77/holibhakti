@@ -1,5 +1,5 @@
-import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import bhaktiLogo from "@/assets/bhakti-logo.png";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,9 +12,11 @@ const Header = () => {
             onClick={() => navigate('/')}
             className="flex items-center gap-3 transition-transform hover:scale-105"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-md">
-              <Heart className="w-6 h-6 text-primary-foreground fill-primary-foreground" />
-            </div>
+            <img 
+              src={bhaktiLogo} 
+              alt="Bhakti Health & Wellness Logo" 
+              className="w-10 h-10 object-contain"
+            />
             <div className="flex flex-col items-start">
               <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Bhakti Health
