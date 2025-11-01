@@ -51,13 +51,13 @@ const ChatManagement = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedUser) {
+    if (selectedUser && currentUserId) {
       fetchMessages();
       fetchDocuments();
       subscribeToMessages();
       subscribeToDocuments();
     }
-  }, [selectedUser]);
+  }, [selectedUser, currentUserId]);
 
   useEffect(() => {
     scrollToBottom();
