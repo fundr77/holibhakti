@@ -44,45 +44,94 @@ const Auth = () => {
     }
 
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-        data: {
-          full_name: fullName,
+    try {
+      const { error, data } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    });
+      });
 
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      // Update phone number after signup
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.from("profiles").update({ phone_number: phoneNumber }).eq("id", user.id);
+      if (error) {
+        toast.error(error.message);
+        return;
       }
-      toast.success("Account created! Redirecting...");
+
+      // Update phone number after signup
+      if (data.user) {
+        const { error: updateError } = await supabase
+          .from("profiles")
+          .update({ phone_number: phoneNumber })
+          .eq("id", data.user.id);
+        
+        if (updateError) {
+          console.error("Phone number update error:", updateError);
+          toast.warning("Account created but phone number not saved");
+        } else {
+          toast.success("Account created successfully! Redirecting...");
+        }
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred during signup");
+      console.error("Signup error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    
+    try {
+      const { error, data } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    setLoading(false);
+      if (error) {
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Invalid email or password. Please check and try again.");
+        } else {
+          toast.error(error.message);
+        }
+      } else if (data.user) {
+        toast.success("Welcome back!");
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred during login");
+      console.error("Login error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Welcome back!");
+  const handlePasswordReset = async () => {
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Password reset link sent to your email!");
+      }
+    } catch (err) {
+      toast.error("Failed to send password reset email");
+      console.error("Password reset error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,6 +176,15 @@ const Auth = () => {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Sign In
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="link" 
+                  className="w-full text-sm" 
+                  onClick={handlePasswordReset}
+                  disabled={loading}
+                >
+                  Forgot password?
                 </Button>
               </form>
             </TabsContent>
