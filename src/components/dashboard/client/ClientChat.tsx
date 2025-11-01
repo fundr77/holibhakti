@@ -155,7 +155,7 @@ const ClientChat = ({ userId }: { userId: string }) => {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !adminId) {
-      toast({ title: "Cannot send empty message: ", description: newMessage, variant: "destructive" });
+      toast({ title: "Cannot send empty message: ", description: adminId, variant: "destructive" });
       return;
     }
 
