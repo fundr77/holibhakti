@@ -19,9 +19,8 @@ const Header = () => {
             />
             <div className="flex flex-col items-start">
               <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Bhakti Health
+                Bhakti Health & Wellness
               </span>
-              <span className="text-xs text-muted-foreground -mt-1">& Wellness</span>
             </div>
           </button>
           
