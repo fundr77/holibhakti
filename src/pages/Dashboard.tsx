@@ -33,11 +33,12 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
+    if (!user && !loading) {
       navigate("/auth");
       return;
     }
+
+    if (!user) return;
 
     const fetchUserRole = async () => {
       const { data: roleData } = await supabase
