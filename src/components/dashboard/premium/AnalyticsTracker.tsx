@@ -18,10 +18,19 @@ interface Analytics {
   notes?: string;
 }
 
+interface FoodLog {
+  breakfast?: string;
+  morning_snack?: string;
+  lunch?: string;
+  evening_snack?: string;
+  dinner?: string;
+}
+
 const AnalyticsTracker = ({ userId }: { userId: string }) => {
   const [analytics, setAnalytics] = useState<Analytics>({
     date: format(new Date(), "yyyy-MM-dd"),
   });
+  const [foodLog, setFoodLog] = useState<FoodLog>({});
   const [history, setHistory] = useState<Analytics[]>([]);
 
   useEffect(() => {
@@ -43,6 +52,13 @@ const AnalyticsTracker = ({ userId }: { userId: string }) => {
     const todayData = data?.find((item) => item.date === today);
     if (todayData) {
       setAnalytics(todayData);
+      if (todayData.food_log) {
+        try {
+          setFoodLog(JSON.parse(todayData.food_log));
+        } catch {
+          setFoodLog({});
+        }
+      }
     }
   };
 
@@ -52,7 +68,7 @@ const AnalyticsTracker = ({ userId }: { userId: string }) => {
       date: analytics.date,
       weight: analytics.weight,
       mood: analytics.mood,
-      food_log: analytics.food_log,
+      food_log: JSON.stringify(foodLog),
       sleep_hours: analytics.sleep_hours,
       notes: analytics.notes,
     });
@@ -117,15 +133,60 @@ const AnalyticsTracker = ({ userId }: { userId: string }) => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="food">Food Log</Label>
-            <Textarea
-              id="food"
-              placeholder="What did you eat today?"
-              value={analytics.food_log || ""}
-              onChange={(e) => setAnalytics({ ...analytics, food_log: e.target.value })}
-              rows={3}
-            />
+          <div className="space-y-4">
+            <h3 className="font-semibold">Food Log</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="breakfast">Breakfast</Label>
+                <Textarea
+                  id="breakfast"
+                  placeholder="What did you eat for breakfast?"
+                  value={foodLog.breakfast || ""}
+                  onChange={(e) => setFoodLog({ ...foodLog, breakfast: e.target.value })}
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="morning_snack">Morning Snack</Label>
+                <Textarea
+                  id="morning_snack"
+                  placeholder="Morning snacks..."
+                  value={foodLog.morning_snack || ""}
+                  onChange={(e) => setFoodLog({ ...foodLog, morning_snack: e.target.value })}
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lunch">Lunch</Label>
+                <Textarea
+                  id="lunch"
+                  placeholder="What did you eat for lunch?"
+                  value={foodLog.lunch || ""}
+                  onChange={(e) => setFoodLog({ ...foodLog, lunch: e.target.value })}
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="evening_snack">Evening Snack</Label>
+                <Textarea
+                  id="evening_snack"
+                  placeholder="Evening snacks..."
+                  value={foodLog.evening_snack || ""}
+                  onChange={(e) => setFoodLog({ ...foodLog, evening_snack: e.target.value })}
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="dinner">Dinner</Label>
+                <Textarea
+                  id="dinner"
+                  placeholder="What did you eat for dinner?"
+                  value={foodLog.dinner || ""}
+                  onChange={(e) => setFoodLog({ ...foodLog, dinner: e.target.value })}
+                  rows={2}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2">
