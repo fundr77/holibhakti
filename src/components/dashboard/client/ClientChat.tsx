@@ -56,13 +56,13 @@ const ClientChat = ({ userId }: { userId: string }) => {
       .eq("role", "admin")
       .limit(1)
       .maybeSingle();
-    
+
     if (error) {
       console.error("Error fetching admin ID:", error);
       toast({ title: "Unable to connect to admin", variant: "destructive" });
       return;
     }
-    
+
     if (data) setAdminId(data.user_id);
   };
 
@@ -73,20 +73,22 @@ const ClientChat = ({ userId }: { userId: string }) => {
       .or(`sender_id.eq.${userId},sender_id.eq.${adminId}`)
       .or(`receiver_id.eq.${userId},receiver_id.eq.${adminId}`)
       .order("created_at", { ascending: true });
-    
+
     if (error) {
       console.error("Error fetching messages:", error);
       return;
     }
-    
+
     // Filter to only show messages between user and admin
-    const filteredMessages = data?.filter(msg => 
-      (msg.sender_id === userId && msg.receiver_id === adminId) ||
-      (msg.sender_id === adminId && msg.receiver_id === userId)
-    ) || [];
-    
+    const filteredMessages =
+      data?.filter(
+        (msg) =>
+          (msg.sender_id === userId && msg.receiver_id === adminId) ||
+          (msg.sender_id === adminId && msg.receiver_id === userId),
+      ) || [];
+
     setMessages(filteredMessages);
-    
+
     // Mark admin messages as read
     await supabase
       .from("chat_messages")
@@ -102,7 +104,7 @@ const ClientChat = ({ userId }: { userId: string }) => {
       .select("*")
       .or(`sender_id.eq.${adminId},receiver_id.eq.${adminId}`)
       .order("created_at", { ascending: false });
-    
+
     if (data) setDocuments(data);
   };
 
@@ -110,16 +112,16 @@ const ClientChat = ({ userId }: { userId: string }) => {
     const channel = supabase
       .channel(`client_chat_${userId}`)
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'chat_messages',
+          event: "*",
+          schema: "public",
+          table: "chat_messages",
         },
         (payload) => {
-          console.log('Message received:', payload);
+          console.log("Message received:", payload);
           fetchMessages();
-        }
+        },
       )
       .subscribe();
 
@@ -130,15 +132,15 @@ const ClientChat = ({ userId }: { userId: string }) => {
 
   const subscribeToDocuments = () => {
     const channel = supabase
-      .channel('client_chat_documents')
+      .channel("client_chat_documents")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'chat_documents',
+          event: "*",
+          schema: "public",
+          table: "chat_documents",
         },
-        () => fetchDocuments()
+        () => fetchDocuments(),
       )
       .subscribe();
 
@@ -153,7 +155,7 @@ const ClientChat = ({ userId }: { userId: string }) => {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !adminId) {
-      toast({ title: "Cannot send empty message", variant: "destructive" });
+      toast({ title: "Cannot send empty message: ", description: newMessage, variant: "destructive" });
       return;
     }
 
@@ -182,21 +184,14 @@ const ClientChat = ({ userId }: { userId: string }) => {
           <ScrollArea className="h-[400px] mb-4 pr-4">
             <div className="space-y-4">
               {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex ${msg.sender_id === userId ? "justify-end" : "justify-start"}`}
-                >
+                <div key={msg.id} className={`flex ${msg.sender_id === userId ? "justify-end" : "justify-start"}`}>
                   <div
                     className={`max-w-[70%] p-3 rounded-lg ${
-                      msg.sender_id === userId
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
+                      msg.sender_id === userId ? "bg-primary text-primary-foreground" : "bg-muted"
                     }`}
                   >
                     <div className="text-sm">{msg.message}</div>
-                    <div className="text-xs opacity-70 mt-1">
-                      {new Date(msg.created_at).toLocaleString()}
-                    </div>
+                    <div className="text-xs opacity-70 mt-1">{new Date(msg.created_at).toLocaleString()}</div>
                   </div>
                 </div>
               ))}
@@ -242,16 +237,10 @@ const ClientChat = ({ userId }: { userId: string }) => {
                       <FileText className="h-4 w-4" />
                       <div>
                         <div className="text-sm font-medium">{doc.file_name}</div>
-                        <div className="text-xs opacity-70">
-                          {new Date(doc.created_at).toLocaleDateString()}
-                        </div>
+                        <div className="text-xs opacity-70">{new Date(doc.created_at).toLocaleDateString()}</div>
                       </div>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => window.open(doc.file_url, '_blank')}
-                    >
+                    <Button size="sm" variant="outline" onClick={() => window.open(doc.file_url, "_blank")}>
                       View
                     </Button>
                   </div>
