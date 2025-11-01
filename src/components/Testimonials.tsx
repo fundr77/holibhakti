@@ -6,7 +6,7 @@ const Testimonials = () => {
     {
       name: "Priya Sharma",
       role: "Marketing Executive",
-      content: "The 7D approach transformed my life completely. I lost 15kg, my stress levels dropped significantly, and I finally feel balanced. The personalized guidance made all the difference.",
+      content: "Bhakti Health and Wellness helped me lose 15 kg, control my blood pressure, and reduce liver fat. More than weight loss, it transformed my lifestyle for the better!",
       rating: 5,
       transformation: "Lost 15kg in 4 months"
     },
