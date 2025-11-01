@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ContentManagement from "./admin/ContentManagement";
 import SubscriptionManagement from "./admin/SubscriptionManagement";
 import UserManagement from "./admin/UserManagement";
+import ChatManagement from "./admin/ChatManagement";
 
 const AdminDashboard = ({ user }: { user: User }) => {
   return (
@@ -13,10 +14,11 @@ const AdminDashboard = ({ user }: { user: User }) => {
       </div>
 
       <Tabs defaultValue="users" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="content">Content</TabsTrigger>
           <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
+          <TabsTrigger value="chat">Chat</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="mt-6">
@@ -29,6 +31,10 @@ const AdminDashboard = ({ user }: { user: User }) => {
 
         <TabsContent value="subscriptions" className="mt-6">
           <SubscriptionManagement />
+        </TabsContent>
+
+        <TabsContent value="chat" className="mt-6">
+          <ChatManagement />
         </TabsContent>
       </Tabs>
     </div>
