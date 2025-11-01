@@ -221,8 +221,8 @@ const Contact = () => {
                   <div>
                     <h4 className="font-semibold mb-2">Location</h4>
                     <p className="text-sm text-muted-foreground">
-                      Serving clients across India<br />
-                      Virtual & In-Person Sessions
+                      160, Raj Victoria, opp. Raj Arcade, near Galaxy Circle,<br />
+                      Pal Gam, Surat, Gujarat 394510
                     </p>
                   </div>
                 </div>
