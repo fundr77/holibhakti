@@ -21,7 +21,7 @@ const Contact = () => {
     const whatsappMessage = encodeURIComponent(
       `Hi! I'm ${formData.name}. ${formData.message}\n\nEmail: ${formData.email}\nPhone: ${formData.phone}`
     );
-    const whatsappNumber = "919876543210"; // Replace with actual WhatsApp number
+    const whatsappNumber = "919998805082"; // Replace with actual WhatsApp number
     
     window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, '_blank');
     
@@ -34,7 +34,7 @@ const Contact = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const whatsappNumber = "919876543210"; // Replace with actual WhatsApp number
+    const whatsappNumber = "919998805082"; // Replace with actual WhatsApp number
     window.open(`https://wa.me/${whatsappNumber}`, '_blank');
   };
 
@@ -100,7 +100,7 @@ const Contact = () => {
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="+91 98765 43210"
+                    placeholder="+919998805082"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     required
@@ -180,7 +180,7 @@ const Contact = () => {
                   <div>
                     <h4 className="font-semibold mb-2">Phone</h4>
                     <p className="text-sm text-muted-foreground">
-                      +91 98765 43210
+                      +919998805082
                     </p>
                   </div>
                 </div>

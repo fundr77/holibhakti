@@ -49,7 +49,7 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>hello@bhaktiwellness.com</li>
-              <li>+91 98765 43210</li>
+              <li>+919998805082</li>
               <li>Virtual & In-Person Sessions</li>
             </ul>
           </div>

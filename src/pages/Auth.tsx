@@ -176,7 +176,7 @@ const Auth = () => {
                   <Input
                     id="signin-email"
                     type="text"
-                    placeholder="+91 9876543210 or your@email.com"
+                    placeholder="+919998805082 or your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -227,7 +227,7 @@ const Auth = () => {
                   <Input
                     id="signup-phone"
                     type="tel"
-                    placeholder="+91 9876543210"
+                    placeholder="+919998805082"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     required
