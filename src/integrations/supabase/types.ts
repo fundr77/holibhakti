@@ -117,6 +117,54 @@ export type Database = {
         }
         Relationships: []
       }
+      personalized_plans: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          description: string | null
+          end_date: string | null
+          goals: string[] | null
+          id: string
+          is_active: boolean | null
+          plan_type: string
+          start_date: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          end_date?: string | null
+          goals?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          plan_type: string
+          start_date?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          end_date?: string | null
+          goals?: string[] | null
+          id?: string
+          is_active?: boolean | null
+          plan_type?: string
+          start_date?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
