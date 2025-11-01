@@ -49,13 +49,17 @@ const Auth = () => {
 
     setLoading(true);
     try {
+      // Generate email from phone if not provided
+      const signupEmail = email || `${phoneNumber.replace(/\D/g, '')}@bhakti-health.app`;
+      
       const { error, data } = await supabase.auth.signUp({
-        email,
+        email: signupEmail,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             full_name: fullName,
+            signup_email: email, // Store original email if provided
           },
         },
       });
@@ -92,21 +96,31 @@ const Auth = () => {
     setLoading(true);
     
     try {
+      let loginEmail = email;
+      
+      // If input looks like a phone number (no @ symbol), look up the account
+      if (!email.includes('@')) {
+        // First try to find if there's an account with this phone
+        const cleanPhone = email.replace(/\D/g, '');
+        
+        // Try the generated email format
+        loginEmail = `${cleanPhone}@bhakti-health.app`;
+      }
+      
       const { error, data } = await supabase.auth.signInWithPassword({
-        email,
+        email: loginEmail,
         password,
       });
 
       if (error) {
         if (error.message.includes("Invalid login credentials")) {
-          toast.error("Invalid email or password. Please check and try again.");
+          toast.error("Invalid phone number/email or password. Please check and try again.");
         } else {
           toast.error(error.message);
         }
         setLoading(false);
       } else if (data.session) {
         toast.success("Welcome back!");
-        // Explicitly navigate to dashboard after successful login
         navigate("/dashboard");
       }
     } catch (err) {
@@ -158,11 +172,11 @@ const Auth = () => {
             <TabsContent value="signin">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
+                  <Label htmlFor="signin-email">Phone Number or Email</Label>
                   <Input
                     id="signin-email"
-                    type="email"
-                    placeholder="your@email.com"
+                    type="text"
+                    placeholder="+91 9876543210 or your@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -220,14 +234,13 @@ const Auth = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
+                  <Label htmlFor="signup-email">Email (Optional)</Label>
                   <Input
                     id="signup-email"
                     type="email"
-                    placeholder="your@email.com"
+                    placeholder="your@email.com (optional)"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
                   />
                 </div>
                 <div className="space-y-2">
