@@ -18,16 +18,20 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Check if user is already logged in and redirect
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         navigate("/dashboard");
       }
-    });
+    };
+    
+    checkSession();
 
+    // Listen for auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         navigate("/dashboard");
       }
@@ -99,13 +103,15 @@ const Auth = () => {
         } else {
           toast.error(error.message);
         }
-      } else if (data.user) {
+        setLoading(false);
+      } else if (data.session) {
         toast.success("Welcome back!");
+        // Explicitly navigate to dashboard after successful login
+        navigate("/dashboard");
       }
     } catch (err) {
       toast.error("An unexpected error occurred during login");
       console.error("Login error:", err);
-    } finally {
       setLoading(false);
     }
   };
