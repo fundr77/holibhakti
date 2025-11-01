@@ -61,20 +61,33 @@ const ClientChat = ({ userId }: { userId: string }) => {
   };
 
   const fetchMessages = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("chat_messages")
       .select("*")
-      .or(`and(sender_id.eq.${userId},receiver_id.eq.${adminId}),and(sender_id.eq.${adminId},receiver_id.eq.${userId})`)
+      .or(`sender_id.eq.${userId},sender_id.eq.${adminId}`)
+      .or(`receiver_id.eq.${userId},receiver_id.eq.${adminId}`)
       .order("created_at", { ascending: true });
     
-    if (data) setMessages(data);
+    if (error) {
+      console.error("Error fetching messages:", error);
+      return;
+    }
+    
+    // Filter to only show messages between user and admin
+    const filteredMessages = data?.filter(msg => 
+      (msg.sender_id === userId && msg.receiver_id === adminId) ||
+      (msg.sender_id === adminId && msg.receiver_id === userId)
+    ) || [];
+    
+    setMessages(filteredMessages);
     
     // Mark admin messages as read
     await supabase
       .from("chat_messages")
       .update({ is_read: true })
       .eq("sender_id", adminId)
-      .eq("receiver_id", userId);
+      .eq("receiver_id", userId)
+      .eq("is_read", false);
   };
 
   const fetchDocuments = async () => {
@@ -89,7 +102,7 @@ const ClientChat = ({ userId }: { userId: string }) => {
 
   const subscribeToMessages = () => {
     const channel = supabase
-      .channel('client_chat_messages')
+      .channel(`client_chat_${userId}`)
       .on(
         'postgres_changes',
         {
@@ -97,7 +110,10 @@ const ClientChat = ({ userId }: { userId: string }) => {
           schema: 'public',
           table: 'chat_messages',
         },
-        () => fetchMessages()
+        (payload) => {
+          console.log('Message received:', payload);
+          fetchMessages();
+        }
       )
       .subscribe();
 
@@ -130,7 +146,10 @@ const ClientChat = ({ userId }: { userId: string }) => {
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !adminId) return;
+    if (!newMessage.trim() || !adminId) {
+      toast({ title: "Cannot send empty message", variant: "destructive" });
+      return;
+    }
 
     const { error } = await supabase.from("chat_messages").insert({
       sender_id: userId,
@@ -139,9 +158,11 @@ const ClientChat = ({ userId }: { userId: string }) => {
     });
 
     if (error) {
-      toast({ title: "Error sending message", variant: "destructive" });
+      console.error("Error sending message:", error);
+      toast({ title: "Error sending message", description: error.message, variant: "destructive" });
     } else {
       setNewMessage("");
+      fetchMessages(); // Refresh messages after sending
     }
   };
 
