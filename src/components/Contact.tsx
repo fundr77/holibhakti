@@ -19,14 +19,12 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // WhatsApp integration - using api.whatsapp.com for better cross-platform support
+    // WhatsApp integration
     const whatsappMessage = encodeURIComponent(
       `Hi! I'm ${formData.name}. I'm interested in: ${formData.service}\n\n${formData.message}\n\nEmail: ${formData.email}\nPhone: ${formData.phone}`
     );
-    const whatsappNumber = "919998805082";
     
-    // Use WhatsApp API link that works on both web and mobile apps
-    const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${whatsappMessage}`;
+    const whatsappLink = `https://api.whatsapp.com/send/?phone=919998805082&text=${whatsappMessage}`;
     
     window.open(whatsappLink, '_blank');
     
@@ -39,10 +37,7 @@ const Contact = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const whatsappNumber = "919998805082";
-    // Use WhatsApp API link that works on both web and mobile apps
-    const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}`;
-    window.open(whatsappLink, '_blank');
+    window.open('https://api.whatsapp.com/send/?phone=919998805082&text=', '_blank');
   };
 
   return (
