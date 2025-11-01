@@ -4,26 +4,29 @@ import { Star, Quote } from "lucide-react";
 const Testimonials = () => {
   const testimonials = [
     {
-      name: "Priya Sharma",
-      role: "Marketing Executive",
-      content: "Bhakti Health and Wellness helped me lose 15 kg, control my blood pressure, and reduce liver fat. More than weight loss, it transformed my lifestyle for the better!",
+      name: "Dr. Anand",
+      role: "High Blood Pressure client",
+      content:
+        "Bhakti Health and Wellness helped me lose 15 kg, control my blood pressure, and reduce liver fat. More than weight loss, it transformed my lifestyle for the better!",
       rating: 5,
-      transformation: "Lost 15kg in 4 months"
+      transformation: "Lost 15kg in 4 months",
     },
     {
-      name: "Rahul Mehta",
-      role: "Tech Entrepreneur",
-      content: "As someone with a demanding career, I thought wellness was impossible. This program showed me how to integrate health into my busy life. My energy has tripled, and my sleep quality is amazing.",
+      name: "Priya Iyer",
+      role: "Postpartum Client",
+      content:
+        "The postpartum program was exactly what I needed. They understood my challenges and helped me regain my strength and balance.",
       rating: 5,
-      transformation: "Improved sleep & energy"
+      transformation: "Regain my strength",
     },
     {
-      name: "Ananya Patel",
-      role: "Teacher",
-      content: "The holistic approach addressing gut health, nutrition, and mental wellness was exactly what I needed. I feel more confident, healthier, and genuinely happy. Highly recommend!",
+      name: "Rag Verma",
+      role: "Teen Client",
+      content:
+        "As a teenager, I used to struggle with acne, low energy, and stress from school. After following a customized wellness plan that included healthy eating, skincare tips, and mindfulness exercises, my skin has cleared up, and I feel more confident and active. I’ve learned how to take care of my body the right way!",
       rating: 5,
-      transformation: "Complete lifestyle transformation"
-    }
+      transformation: "Complete lifestyle transformation",
+    },
   ];
 
   return (
@@ -43,25 +46,23 @@ const Testimonials = () => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {testimonials.map((testimonial, index) => (
-            <Card 
+            <Card
               key={index}
               className="border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl relative overflow-hidden group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500" />
-              
+
               <CardContent className="p-8 relative">
                 <Quote className="w-10 h-10 text-primary/20 mb-4" />
-                
+
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-primary text-primary" />
                   ))}
                 </div>
-                
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  "{testimonial.content}"
-                </p>
-                
+
+                <p className="text-muted-foreground mb-6 leading-relaxed">"{testimonial.content}"</p>
+
                 <div className="pt-4 border-t border-border/50">
                   <p className="font-semibold text-foreground">{testimonial.name}</p>
                   <p className="text-sm text-muted-foreground mb-2">{testimonial.role}</p>
