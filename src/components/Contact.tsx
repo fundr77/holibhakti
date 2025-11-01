@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
@@ -11,6 +12,7 @@ const Contact = () => {
     name: "",
     email: "",
     phone: "",
+    service: "",
     message: ""
   });
 
@@ -19,7 +21,7 @@ const Contact = () => {
     
     // WhatsApp integration
     const whatsappMessage = encodeURIComponent(
-      `Hi! I'm ${formData.name}. ${formData.message}\n\nEmail: ${formData.email}\nPhone: ${formData.phone}`
+      `Hi! I'm ${formData.name}. I'm interested in: ${formData.service}\n\n${formData.message}\n\nEmail: ${formData.email}\nPhone: ${formData.phone}`
     );
     const whatsappNumber = "919998805082"; // Replace with actual WhatsApp number
     
@@ -30,7 +32,7 @@ const Contact = () => {
     });
     
     // Reset form
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    setFormData({ name: "", email: "", phone: "", service: "", message: "" });
   };
 
   const handleWhatsAppClick = () => {
@@ -106,6 +108,29 @@ const Contact = () => {
                     required
                     className="bg-background"
                   />
+                </div>
+                
+                <div>
+                  <label htmlFor="service" className="block text-sm font-medium mb-2">
+                    I'm interested in
+                  </label>
+                  <Select
+                    value={formData.service}
+                    onValueChange={(value) => setFormData({ ...formData, service: value })}
+                    required
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder="Select a service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Diet Plan">Diet Plan</SelectItem>
+                      <SelectItem value="Stress Management">Stress Management</SelectItem>
+                      <SelectItem value="Weight Loss">Weight Loss</SelectItem>
+                      <SelectItem value="Sleep Management">Sleep Management</SelectItem>
+                      <SelectItem value="Weight Gain">Weight Gain</SelectItem>
+                      <SelectItem value="Exercise">Exercise</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div>
