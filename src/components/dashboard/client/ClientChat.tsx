@@ -50,12 +50,18 @@ const ClientChat = ({ userId }: { userId: string }) => {
   }, [messages]);
 
   const fetchAdminId = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("user_roles")
       .select("user_id")
       .eq("role", "admin")
       .limit(1)
-      .single();
+      .maybeSingle();
+    
+    if (error) {
+      console.error("Error fetching admin ID:", error);
+      toast({ title: "Unable to connect to admin", variant: "destructive" });
+      return;
+    }
     
     if (data) setAdminId(data.user_id);
   };
