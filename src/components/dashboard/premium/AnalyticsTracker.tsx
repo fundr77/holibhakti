@@ -111,14 +111,29 @@ const AnalyticsTracker = ({ userId }: { userId: string }) => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="mood">Mood</Label>
-              <Input
-                id="mood"
-                type="text"
-                placeholder="e.g., Happy, Energetic"
-                value={analytics.mood || ""}
-                onChange={(e) => setAnalytics({ ...analytics, mood: e.target.value })}
-              />
+              <Label>Mood</Label>
+              <div className="flex gap-2">
+                {[
+                  { emoji: "😔", label: "Bad", value: "bad" },
+                  { emoji: "😐", label: "Okay", value: "okay" },
+                  { emoji: "🙂", label: "Good", value: "good" },
+                  { emoji: "😄", label: "Excellent", value: "excellent" }
+                ].map((mood) => (
+                  <button
+                    key={mood.value}
+                    type="button"
+                    onClick={() => setAnalytics({ ...analytics, mood: mood.value })}
+                    className={`flex-1 flex flex-col items-center gap-1 p-3 rounded-lg border-2 transition-all hover:scale-105 ${
+                      analytics.mood === mood.value
+                        ? "border-primary bg-primary/10"
+                        : "border-border bg-background"
+                    }`}
+                  >
+                    <span className="text-2xl">{mood.emoji}</span>
+                    <span className="text-xs">{mood.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="sleep">Sleep Hours</Label>
