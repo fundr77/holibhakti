@@ -7,80 +7,122 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
-interface Subscription {
+interface UserWithAccess {
   id: string;
-  user_id: string;
-  plan: string;
-  is_active: boolean;
-  start_date: string;
-  end_date: string | null;
-  payment_proof: string | null;
-  profiles: {
-    full_name: string;
-    phone_number: string;
-  };
+  full_name: string | null;
+  phone_number: string | null;
+  subscription: {
+    id: string;
+    plan: string;
+    is_active: boolean;
+    start_date: string;
+  } | null;
+  role: string;
 }
 
 const SubscriptionManagement = () => {
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+  const [users, setUsers] = useState<UserWithAccess[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
 
   useEffect(() => {
-    fetchSubscriptions();
+    fetchCurrentUser();
+    fetchAllUsers();
   }, []);
 
-  const fetchSubscriptions = async () => {
-    const { data } = await supabase
-      .from("subscriptions")
-      .select("*, profiles(full_name, phone_number)")
-      .order("created_at", { ascending: false });
-
-    if (data) setSubscriptions(data as any);
+  const fetchCurrentUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) setCurrentUserId(user.id);
   };
 
-  const updatePlan = async (id: string, newPlan: string) => {
-    const { error: subError } = await supabase
-      .from("subscriptions")
-      .update({ plan: newPlan as "free" | "premium" | "admin", is_active: true })
-      .eq("id", id);
+  const fetchAllUsers = async () => {
+    // Fetch all profiles
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, full_name, phone_number")
+      .order("created_at", { ascending: false });
 
-    if (subError) {
-      toast.error("Failed to update subscription");
-      return;
+    if (!profiles) return;
+
+    // Fetch subscriptions for all users
+    const { data: subscriptions } = await supabase
+      .from("subscriptions")
+      .select("id, user_id, plan, is_active, start_date");
+
+    // Fetch roles for all users
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("user_id, role");
+
+    // Combine the data
+    const usersWithAccess = profiles.map(profile => {
+      const subscription = subscriptions?.find(s => s.user_id === profile.id);
+      const role = roles?.find(r => r.user_id === profile.id);
+      
+      return {
+        id: profile.id,
+        full_name: profile.full_name,
+        phone_number: profile.phone_number,
+        subscription: subscription || null,
+        role: role?.role || 'free'
+      };
+    });
+
+    setUsers(usersWithAccess);
+  };
+
+  const updateUserAccess = async (userId: string, newPlan: string) => {
+    // Update or create subscription
+    const { data: existingSub } = await supabase
+      .from("subscriptions")
+      .select("id")
+      .eq("user_id", userId)
+      .single();
+
+    if (existingSub) {
+      await supabase
+        .from("subscriptions")
+        .update({ plan: newPlan as "free" | "premium" | "admin", is_active: true })
+        .eq("user_id", userId);
+    } else {
+      await supabase
+        .from("subscriptions")
+        .insert({ 
+          user_id: userId, 
+          plan: newPlan as "free" | "premium" | "admin",
+          is_active: true 
+        });
     }
 
     // Update user role
-    const sub = subscriptions.find((s) => s.id === id);
-    if (sub) {
-      await supabase.from("user_roles").delete().eq("user_id", sub.user_id);
-      await supabase.from("user_roles").insert([{ 
-        user_id: sub.user_id, 
-        role: newPlan as "free" | "premium" | "admin" 
-      }]);
-    }
+    await supabase.from("user_roles").delete().eq("user_id", userId);
+    await supabase.from("user_roles").insert([{ 
+      user_id: userId, 
+      role: newPlan as "free" | "premium" | "admin" 
+    }]);
 
-    toast.success("Subscription updated");
-    fetchSubscriptions();
+    toast.success("User access updated");
+    fetchAllUsers();
   };
 
-  const toggleStatus = async (id: string, currentStatus: boolean) => {
+  const toggleStatus = async (userId: string, currentStatus: boolean) => {
     const { error } = await supabase
       .from("subscriptions")
       .update({ is_active: !currentStatus })
-      .eq("id", id);
+      .eq("user_id", userId);
 
     if (error) {
       toast.error("Failed to update status");
     } else {
       toast.success("Status updated");
-      fetchSubscriptions();
+      fetchAllUsers();
     }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Subscription Management</CardTitle>
-        <CardDescription>Manage user subscriptions and payments</CardDescription>
+        <CardTitle>User Access Management</CardTitle>
+        <CardDescription>Manage all user access levels and platform permissions</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -88,19 +130,22 @@ const SubscriptionManagement = () => {
             <TableRow>
               <TableHead>User</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead>Plan</TableHead>
+              <TableHead>Access Level</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Start Date</TableHead>
+              <TableHead>Joined</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {subscriptions.map((sub) => (
-              <TableRow key={sub.id}>
-                <TableCell className="font-medium">{sub.profiles?.full_name}</TableCell>
-                <TableCell>{sub.profiles?.phone_number}</TableCell>
+            {users.filter(u => u.id !== currentUserId).map((user) => (
+              <TableRow key={user.id}>
+                <TableCell className="font-medium">{user.full_name || "Unnamed User"}</TableCell>
+                <TableCell>{user.phone_number || "N/A"}</TableCell>
                 <TableCell>
-                  <Select value={sub.plan} onValueChange={(value) => updatePlan(sub.id, value)}>
+                  <Select 
+                    value={user.role} 
+                    onValueChange={(value) => updateUserAccess(user.id, value)}
+                  >
                     <SelectTrigger className="w-32">
                       <SelectValue />
                     </SelectTrigger>
@@ -112,18 +157,22 @@ const SubscriptionManagement = () => {
                   </Select>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={sub.is_active ? "default" : "secondary"}>
-                    {sub.is_active ? "Active" : "Inactive"}
+                  <Badge variant={user.subscription?.is_active ? "default" : "secondary"}>
+                    {user.subscription?.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </TableCell>
-                <TableCell>{new Date(sub.start_date).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {user.subscription?.start_date 
+                    ? new Date(user.subscription.start_date).toLocaleDateString()
+                    : "Not set"}
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => toggleStatus(sub.id, sub.is_active)}
+                    onClick={() => toggleStatus(user.id, user.subscription?.is_active || false)}
                   >
-                    {sub.is_active ? "Deactivate" : "Activate"}
+                    {user.subscription?.is_active ? "Deactivate" : "Activate"}
                   </Button>
                 </TableCell>
               </TableRow>
