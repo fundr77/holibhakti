@@ -10,33 +10,32 @@ const Footer = () => {
               Bhakti Wellness
             </h3>
             <p className="text-sm text-muted-foreground">
-              Transforming lives through holistic 7D wellness coaching. 
-              Mind, body, and spirit in perfect harmony.
+              Transforming lives through holistic 7D wellness coaching. Mind, body, and spirit in perfect harmony.
             </p>
           </div>
-          
+
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <button 
-                  onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+                <button
+                  onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
                   className="hover:text-primary transition-colors"
                 >
                   About
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                <button
+                  onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                   className="hover:text-primary transition-colors"
                 >
                   Services
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                <button
+                  onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
                   className="hover:text-primary transition-colors"
                 >
                   Contact
@@ -44,17 +43,20 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>hello@bhaktiwellness.com</li>
+              <li>dr.priankamodi5@gmail.com</li>
               <li>+919998805082</li>
-              <li>Virtual & In-Person Sessions</li>
+              <li>
+                Virtual & In-Person Sessions: 160, Raj Victoria, opp. Raj Arcade, near Galaxy Circle, Pal Gam, Surat,
+                Gujarat 394510
+              </li>
             </ul>
           </div>
         </div>
-        
+
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           <p>© 2025 Bhakti Wellness. All rights reserved.</p>
           <p className="flex items-center gap-2">
