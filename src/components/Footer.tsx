@@ -47,7 +47,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>dr.priankamodi5@gmail.com</li>
+              <li>dr.priyankamodi5@gmail.com</li>
               <li>+919998805082</li>
               <li>
                 Virtual & In-Person Sessions: 160, Raj Victoria, opp. Raj Arcade, near Galaxy Circle, Pal Gam, Surat,

@@ -18,8 +18,11 @@ const Header = () => {
               className="w-10 h-10 object-contain"
             />
             <div className="flex flex-col items-start">
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Bhakti Health & Wellness
+              <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent leading-tight">
+                Holi Bhakti
+              </span>
+              <span className="text-xs font-semibold text-muted-foreground">
+                Holistic Health & Wellness
               </span>
             </div>
           </button>
