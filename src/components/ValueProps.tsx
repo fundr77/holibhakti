@@ -4,6 +4,8 @@ import { ArrowRight, HeartPulse, Leaf, Users, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const ValueProps = () => {
+  const navigate = useNavigate();
+
   const values = [
     {
       icon: HeartPulse,
