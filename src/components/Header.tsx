@@ -39,8 +39,8 @@ const Header = () => {
             </button>
             <button 
               onClick={() => {
-                const servicesSection = document.getElementById('services');
-                servicesSection?.scrollIntoView({ behavior: 'smooth' });
+                const contactSection = document.getElementById('contact');
+                contactSection?.scrollIntoView({ behavior: 'smooth' });
               }}
               className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
             >
@@ -56,7 +56,10 @@ const Header = () => {
               Contact
             </button>
             <button 
-              onClick={() => navigate('/auth')}
+              onClick={() => {
+                const contactSection = document.getElementById('contact');
+                contactSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="text-sm font-medium px-4 py-2 rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
             >
               Get Started
