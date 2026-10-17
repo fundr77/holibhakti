@@ -58,7 +58,7 @@ const Footer = () => {
         </div>
 
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© 2025 Bhakti Wellness. All rights reserved.</p>
+          <p>© 2026 Bhakti Wellness. All rights reserved.</p>
           <p className="flex items-center gap-2">
             Made with <Heart className="w-4 h-4 fill-primary text-primary" /> for your wellness journey
           </p>
